@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function Json() {
   const [jsonData, setJsonData] = useState("{}");
+  const [parseError, setParseError] = useState(null);
   const [isValidJson, setIsValidJson] = useState(true);
   const style = { fontFamily: "consolas, monospace" };
 
@@ -12,8 +13,11 @@ export default function Json() {
       JSON.parse(data);
     } catch (e) {
       setIsValidJson(false);
+      console.log(e);
+      setParseError(e.toString());
       return;
     }
+    setParseError(null);
     setIsValidJson(true);
   }
 
@@ -28,17 +32,31 @@ export default function Json() {
         }}
       ></textarea>
       <hr />
-      <pre>{isValidJson && JSON.stringify(JSON.parse(jsonData), null, 2)}</pre>
+      <pre>
+        {isValidJson ? (
+          JSON.stringify(JSON.parse(jsonData), null, 2)
+        ) : (
+          <p>{parseError}</p>
+        )}
+      </pre>
       <hr />
-      {isValidJson && (
+      {isValidJson ? (
         <>
-          {JSON.parse(jsonData) instanceof Object && (
-            <JsonObject data={JSON.parse(jsonData)} indent={0} path={"root"} />
-          )}
-          {JSON.parse(jsonData) instanceof Array && (
-            <JsonArray data={JSON.parse(jsonData)} indent={0} path={"root"} />
-          )}
+          {typeof JSON.parse(jsonData) === "object" &&
+            !(JSON.parse(jsonData) instanceof Array) && (
+              <JsonObject
+                data={JSON.parse(jsonData)}
+                indent={0}
+                path={"root"}
+              />
+            )}
+          {typeof JSON.parse(jsonData) === "object" &&
+            JSON.parse(jsonData) instanceof Array && (
+              <JsonArray data={JSON.parse(jsonData)} indent={0} path={"root"} />
+            )}
         </>
+      ) : (
+        <p>{parseError}</p>
       )}
       <hr />
     </div>
