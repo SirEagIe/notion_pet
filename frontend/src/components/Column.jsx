@@ -1,60 +1,35 @@
 import Card from "./Card";
-import { CSS } from "@dnd-kit/utilities";
-import { useDroppable } from "@dnd-kit/core";
-import {
-  useSortable,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import DroppableContainer from "./DroppableContainer";
+import { Fragment } from "react";
 
-export default function Column({ data, dragOverlayHeight }) {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: data.id, data: { type: "column" } });
+export default function Column({ data }) {
   const style = {
     backgroundColor: "blueviolet",
-    transition,
-    transform: CSS.Transform.toString(transform),
-    opacity: isDragging ? 0.5 : 1,
   };
-  if (isDragging) {
-    return (
-      <>
-        <div
-          className="col m-1"
-          style={style}
-          ref={setNodeRef}
-          {...attributes}
-          {...listeners}
-        ></div>
-      </>
-    );
-  }
   return (
     <>
-      <div
-        className="col m-1"
-        style={style}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-      >
+      <div className="col m-1 pb-2" style={style}>
         {data.name}
-        <SortableContext
-          items={data.cards}
-          strategy={verticalListSortingStrategy}
-        >
-          <div>
-            {data.cards.map((card) => (
+        <div>
+          {data.cards.map((card) => (
+            <Fragment key={card.id}>
+              <DroppableContainer
+                key={data.id + "_" + card.id}
+                data={{
+                  id: data.id + "_" + card.id,
+                  column: data.id,
+                  card: card.id,
+                }}
+              />
               <Card key={card.id} data={card} />
-            ))}
-          </div>
-        </SortableContext>
+            </Fragment>
+          ))}
+        </div>
+
+        <DroppableContainer
+          key={data.id + "_0"}
+          data={{ id: data.id + "_0", column: data.id, card: 0 }}
+        />
       </div>
     </>
   );

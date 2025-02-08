@@ -2,12 +2,12 @@ import { useState } from "react";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
 import { data } from "./data";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
 
 function App() {
   const [dashboards, setDashboards] = useState(data);
 
-  function moveCard(card_id, col_id) {
+  function moveCard(card_id, col_id, before_card_id) {
     console.log(card_id, col_id);
     setDashboards((prevState) => {
       var moved_card = null;
@@ -21,26 +21,51 @@ function App() {
           }
         });
       });
-      newState.forEach((dash) => {
-        dash.columns.forEach((col) => {
-          if (col.id === col_id) col.cards.push(moved_card);
+      if (before_card_id === 0) {
+        newState.forEach((dash) => {
+          dash.columns.forEach((col) => {
+            if (col.id === col_id) col.cards.push(moved_card);
+          });
         });
-      });
+      } else {
+        newState.forEach((dash) => {
+          dash.columns.forEach((col) => {
+            if (col.id === col_id) {
+              var idx = col.cards.findIndex(
+                (card) => card.id === before_card_id
+              );
+              col.cards.splice(idx, 0, moved_card);
+            }
+          });
+        });
+      }
       return newState;
     });
   }
 
   function handleDragEnd(event) {
-    console.log(event);
+    if (
+      event.active.id &&
+      event.over?.data.current.column !== undefined &&
+      event.over?.data.current.card !== undefined
+    ) {
+      moveCard(
+        event.active.id,
+        event.over?.data.current.column,
+        event.over?.data.current.card
+      );
+    }
   }
 
   return (
     <>
-      <div className="container" style={{ backgroundColor: "aqua" }}>
-        {dashboards.map((dash) => (
-          <Dashboard key={dash.id} data={dash} />
-        ))}
-      </div>
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <div className="container" style={{ backgroundColor: "aqua" }}>
+          {dashboards.map((dash) => (
+            <Dashboard key={dash.id} data={dash} />
+          ))}
+        </div>
+      </DndContext>
       <button
         className="btn btn-primary mt-5"
         onClick={() => {

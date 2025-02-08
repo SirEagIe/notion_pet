@@ -1,21 +1,13 @@
 import { useDraggable, DragOverlay } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
 
 export default function Card({ data }) {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: data.id, data: { type: "card" } });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: data.id,
+  });
   const style = {
     backgroundColor: "aquamarine",
-    transition,
-    transform: CSS.Transform.toString(transform),
-    opacity: isDragging ? 0.5 : 1,
+    transform: CSS.Translate.toString(transform),
   };
   return (
     <>
@@ -26,7 +18,9 @@ export default function Card({ data }) {
         {...attributes}
         {...listeners}
       >
-        <div className="col">{data.name}</div>
+        <div className="col" style={{ height: "100px" }}>
+          {data.name}
+        </div>
       </div>
     </>
   );

@@ -22,3 +22,28 @@ frontend/*.ntvs*
 frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
+
+# Logs
+frontend_2/logs
+frontend_2/*.log
+frontend_2/npm-debug.log*
+frontend_2/yarn-debug.log*
+frontend_2/yarn-error.log*
+frontend_2/pnpm-debug.log*
+frontend_2/lerna-debug.log*
+
+frontend_2/node_modules
+frontend_2/dist
+frontend_2/dist-ssr
+frontend_2/*.local
+
+# Editor directories and files
+frontend_2/.vscode/*
+frontend_2/!.vscode/extensions.json
+frontend_2/.idea
+frontend_2/.DS_Store
+frontend_2/*.suo
+frontend_2/*.ntvs*
+frontend_2/*.njsproj
+frontend_2/*.sln
+frontend_2/*.sw?
