@@ -1,58 +1,83 @@
-import JsonObject from "./JsonObject";
-import JsonArray from "./JsonArray";
-import { useState, useRef } from "react";
+import JsonObject from './JsonObject'
+import JsonArray from './JsonArray'
+import { useState, useRef } from 'react'
 
-export default function JsonNode({ dataKey, data, indent, needComma, path }) {
+export default function JsonNode({
+  dataKey,
+  data,
+  indent,
+  nestingLevel,
+  needComma,
+  path,
+}) {
   return (
     <>
       {dataKey !== null && (
         <>
-          "{dataKey}"<span style={{ whiteSpace: "pre" }}>: </span>
+          <span className="json-sign">"</span>
+          <span className={'json-string-key-' + Math.min(nestingLevel, 9)}>
+            {dataKey}
+          </span>
+          <span className="json-sign">"</span>
+          <span className="json-sign">: </span>
         </>
       )}
-      {typeof data === "object" &&
+      {typeof data === 'object' &&
         !(data instanceof Array) &&
         data !== null && (
           <>
-            <JsonObject data={data} indent={4 + indent} path={path} />
-            {needComma && ","}
-            <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+            <JsonObject
+              data={data}
+              indent={4 + indent}
+              nestingLevel={nestingLevel}
+              path={path}
+            />
+            {needComma && <span className="json-sign">,</span>}
+            <span className="json-path"> {path}</span>
           </>
         )}
-      {typeof data === "object" && data instanceof Array && (
+      {typeof data === 'object' && data instanceof Array && (
         <>
-          <JsonArray data={data} indent={4 + indent} path={path} />
-          {needComma && ","}
-          <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+          <JsonArray
+            data={data}
+            indent={4 + indent}
+            nestingLevel={nestingLevel}
+            path={path}
+          />
+          {needComma && <span className="json-sign">,</span>}
+          <span className="json-path"> {path}</span>
         </>
       )}
-      {typeof data === "string" && (
+      {typeof data === 'string' && (
         <>
-          "{data}"{needComma && ","}
-          <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+          <span className="json-sign">"</span>
+          <span className="json-string-value">{data}</span>
+          <span className="json-sign">"</span>
+          {needComma && <span className="json-sign">,</span>}
+          <span className="json-path"> {path}</span>
         </>
       )}
-      {typeof data === "number" && (
+      {typeof data === 'number' && (
         <>
-          {data}
-          {needComma && ","}
-          <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+          <span className="json-value">{data}</span>
+          {needComma && <span className="json-sign">,</span>}
+          <span className="json-path"> {path}</span>
         </>
       )}
-      {typeof data === "boolean" && (
+      {typeof data === 'boolean' && (
         <>
-          {data.toString()}
-          {needComma && ","}
-          <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+          <span className="json-value">{data.toString()}</span>
+          {needComma && <span className="json-sign">,</span>}
+          <span className="json-path"> {path}</span>
         </>
       )}
       {data === null && (
         <>
-          null
-          {needComma && ","}
-          <span style={{ color: "#aaa", whiteSpace: "pre" }}> {path}</span>
+          <span className="json-value">null</span>
+          {needComma && <span className="json-sign">,</span>}
+          <span className="json-path"> {path}</span>
         </>
       )}
     </>
-  );
+  )
 }

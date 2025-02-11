@@ -1,0 +1,137 @@
+:root[data-theme='light'] {
+    --background-color: #e6e7ed;
+    --text-color: #343b58;
+    --sign-color: #006c86;
+    --bracket-color: #484c61;
+    --json-key-color-0: #2959aa;
+    --json-key-color-1: #006c86;
+    --json-key-color-2: #0f4b6e;
+    --json-key-color-3: #65359d;
+    --json-key-color-4: #8f5e15;
+    --json-key-color-5: #006c86;
+    --json-key-color-6: #006c86;
+    --json-key-color-7: #8c4351;
+    --json-key-color-8: #385f0d;
+    --json-string-value-color: #385f0d;
+    --json-value-color: #965027;
+    --json-path-color: #000;
+    --json-error-color: #942f2f;
+}
+
+:root[data-theme='dark'] {
+    --background-color: #1a1b26;
+    /* background-color: #24283b; */
+    --text-color: #c0caf5;
+    --sign-color: #89bdf5;
+    --bracket-color: #89ddff;
+    --json-key-color-0: #7aa2f7;
+    --json-key-color-1: #0db9d7;
+    --json-key-color-2: #7dcfff;
+    --json-key-color-3: #bb9af7;
+    --json-key-color-4: #e0af68;
+    --json-key-color-5: #0db9d7;
+    --json-key-color-6: #73daca;
+    --json-key-color-7: #f7768e;
+    --json-key-color-8: #9ece6a;
+    --json-string-value-color: #9ece6a;
+    --json-value-color: #ff9e64;
+    --json-path-color: #fff;
+    --json-error-color: #ff5370;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    transition: background-color 0.5s ease;
+}
+
+textarea {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.5s ease;
+}
+
+.json-sign {
+    color: var(--sign-color);
+    white-space: pre;
+    transition: color 0.5s ease;
+}
+
+.json-bracket {
+    color: var(--bracket-color);
+    white-space: pre;
+    transition: color 0.5s ease;
+}
+
+.json-string-key-1 {
+    color: var(--json-key-color-0);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-2 {
+    color: var(--json-key-color-1);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-3 {
+    color: var(--json-key-color-2);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-4 {
+    color: var(--json-key-color-3);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-5 {
+    color: var(--json-key-color-4);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-6 {
+    color: var(--json-key-color-5);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-7 {
+    color: var(--json-key-color-6);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-8 {
+    color: var(--json-key-color-7);
+    transition: color 0.5s ease;
+}
+
+.json-string-key-9 {
+    color: var(--json-key-color-8);
+    transition: color 0.5s ease;
+}
+
+.json-string-value {
+    color: var(--json-string-value-color);
+    transition: color 0.5s ease;
+}
+
+.json-value {
+    color: var(--json-value-color);
+    transition: color 0.5s ease;
+}
+
+.json-path {
+    color: var(--json-path-color);
+    transition: color 0.5s ease;
+    opacity: 0.1;
+    transition: opacity 0.5s ease;
+    white-space: pre;
+}
+
+.json-path:hover {
+    opacity: 0.5;
+}
+
+.json-error {
+    color: var(--json-error-color);
+    transition: color 0.5s ease;
+}
