@@ -38,18 +38,22 @@
     --json-path-color: #fff;
     --json-error-color: #ff5370;
 }
-
+::-webkit-scrollbar {
+    display: none;
+}
 body {
     background-color: var(--background-color);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
+    font-size: 14px;
     transition: background-color 0.5s ease;
 }
 
 textarea {
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--text-color) !important;
     transition: background-color 0.5s ease;
+    font-size: 14px !important;
 }
 
 .json-sign {
