@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 8080,
+    allowedHosts: ["sireagle.ru", "www.sireagle.ru"],
   }
 })

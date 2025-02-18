@@ -3,15 +3,24 @@ import "./App.css";
 import Dashboard from "./components/Dashboard";
 import { data } from "./data";
 import { DndContext, closestCenter } from "@dnd-kit/core";
+import { useSensors, useSensor, PointerSensor } from "@dnd-kit/core";
 
 function App() {
   const [dashboards, setDashboards] = useState(data);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
+  );
+
   function moveCard(card_id, col_id, before_card_id) {
-    console.log(card_id, col_id);
     setDashboards((prevState) => {
       var moved_card = null;
       var newState = [...prevState];
+      if (card_id === before_card_id) {
+        return newState;
+      }
       newState.forEach((dash) => {
         dash.columns.forEach((col) => {
           var searched_card = col.cards.find((card) => card.id === card_id);
@@ -59,21 +68,17 @@ function App() {
 
   return (
     <>
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        sensors={sensors}
+      >
         <div className="container" style={{ backgroundColor: "aqua" }}>
           {dashboards.map((dash) => (
             <Dashboard key={dash.id} data={dash} />
           ))}
         </div>
       </DndContext>
-      <button
-        className="btn btn-primary mt-5"
-        onClick={() => {
-          moveCard(7, 2);
-        }}
-      >
-        Click
-      </button>
     </>
   );
 }

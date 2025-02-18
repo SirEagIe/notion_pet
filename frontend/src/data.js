@@ -10,10 +10,12 @@ export const data = [
           {
             id: 1,
             name: "c_1",
+            text: "-",
           },
           {
             id: 7,
             name: "c_7",
+            text: "-",
           },
         ],
       },
@@ -24,6 +26,7 @@ export const data = [
           {
             id: 2,
             name: "c_2",
+            text: "-",
           },
         ],
       },
@@ -34,6 +37,7 @@ export const data = [
           {
             id: 3,
             name: "c_3",
+            text: "-",
           },
         ],
       },
@@ -51,6 +55,7 @@ export const data = [
           {
             id: 4,
             name: "c_4",
+            text: "-",
           },
         ],
       },
@@ -61,6 +66,7 @@ export const data = [
           {
             id: 5,
             name: "c_5",
+            text: "-",
           },
         ],
       },
@@ -71,6 +77,7 @@ export const data = [
           {
             id: 6,
             name: "c_6",
+            text: "-",
           },
         ],
       },
