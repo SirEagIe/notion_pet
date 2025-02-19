@@ -4,7 +4,7 @@ import DroppableContainer from "./DroppableContainer";
 import { useRef, Fragment } from "react";
 import { createPortal } from "react-dom";
 
-export default function Column({ data, dashboards, setDashboards }) {
+export default function Column({ colomnData, dashboards, setDashboards }) {
   const style = {
     backgroundColor: "blueviolet",
   };
@@ -13,34 +13,36 @@ export default function Column({ data, dashboards, setDashboards }) {
     <>
       {createPortal(
         <CardModal
-          data={{
+          cardData={{
             id: -1,
-            col_id: data.id,
+            col_id: colomnData.id,
             name: "-",
             text: "-",
+            images: [],
           }}
           modalRef={modalRef}
           dashboards={dashboards}
           setDashboards={setDashboards}
+          editMode={true}
         />,
         document.getElementById("modal")
       )}
-      <div className="m-1 p-1 rounded-xl w-full" style={style}>
-        {data.name}
+      <div className="col m-1" style={style}>
+        {colomnData.name}
         <div>
-          {data.cards.map((card) => (
+          {colomnData.cards.map((card) => (
             <Fragment key={card.id}>
               <DroppableContainer
-                key={data.id + "_" + card.id}
+                key={colomnData.id + "_" + card.id}
                 data={{
-                  id: data.id + "_" + card.id,
-                  column: data.id,
+                  id: colomnData.id + "_" + card.id,
+                  column: colomnData.id,
                   card: card.id,
                 }}
               />
               <Card
                 key={card.id}
-                data={card}
+                cardData={card}
                 dashboards={dashboards}
                 setDashboards={setDashboards}
               />
@@ -49,12 +51,12 @@ export default function Column({ data, dashboards, setDashboards }) {
         </div>
 
         <DroppableContainer
-          key={data.id + "_0"}
-          data={{ id: data.id + "_0", column: data.id, card: 0 }}
+          key={colomnData.id + "_0"}
+          data={{ id: colomnData.id + "_0", column: colomnData.id, card: 0 }}
         />
 
         <button
-          className="bg-gray-800 rounded-2xl mt-1 mb-1 p-1 w-10"
+          className="btn btn-sm btn-primary m-2"
           onClick={() => {
             modalRef.current.showModal();
           }}

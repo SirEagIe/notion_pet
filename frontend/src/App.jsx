@@ -67,7 +67,7 @@ function App() {
 
   return (
     <>
-      <div className="container mx-auto mt-5">
+      <div className="container">
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
@@ -76,7 +76,7 @@ function App() {
           {dashboards.map((dash) => (
             <Dashboard
               key={dash.id}
-              data={dash}
+              dashboardData={dash}
               dashboards={dashboards}
               setDashboards={setDashboards}
             />
