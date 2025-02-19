@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./App.css";
 import Dashboard from "./components/Dashboard";
 import { data } from "./data";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -68,17 +67,22 @@ function App() {
 
   return (
     <>
-      <DndContext
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        sensors={sensors}
-      >
-        <div className="container" style={{ backgroundColor: "aqua" }}>
+      <div className="container mx-auto mt-5">
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          sensors={sensors}
+        >
           {dashboards.map((dash) => (
-            <Dashboard key={dash.id} data={dash} />
+            <Dashboard
+              key={dash.id}
+              data={dash}
+              dashboards={dashboards}
+              setDashboards={setDashboards}
+            />
           ))}
-        </div>
-      </DndContext>
+        </DndContext>
+      </div>
     </>
   );
 }

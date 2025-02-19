@@ -4,10 +4,11 @@ import { createPortal } from "react-dom";
 import { useRef, useState } from "react";
 import CardModal from "./CardModal";
 
-export default function Card({ data }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: data.id,
-  });
+export default function Card({ data, dashboards, setDashboards }) {
+  const { isDragging, attributes, listeners, setNodeRef, transform } =
+    useDraggable({
+      id: data.id,
+    });
   const modalRef = useRef();
   const style = {
     backgroundColor: "aquamarine",
@@ -16,19 +17,23 @@ export default function Card({ data }) {
 
   return (
     <>
+      {createPortal(
+        <CardModal
+          data={data}
+          modalRef={modalRef}
+          dashboards={dashboards}
+          setDashboards={setDashboards}
+        />,
+        document.getElementById("modal")
+      )}
       <div
-        className="row m-1"
+        className="p-1 m-1 outline-0 rounded-xl"
         style={style}
         ref={setNodeRef}
         {...attributes}
         {...listeners}
       >
-        {createPortal(
-          <CardModal data={data} modalRef={modalRef} />,
-          document.getElementById("modal")
-        )}
         <div
-          className="col"
           style={{ height: "100px" }}
           onClick={() => {
             modalRef.current.showModal();

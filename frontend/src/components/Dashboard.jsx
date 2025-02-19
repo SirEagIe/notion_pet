@@ -1,16 +1,23 @@
 import Column from "./Column";
 import { useState } from "react";
 
-export default function Dashboard({ data }) {
+export default function Dashboard({ data, dashboards, setDashboards }) {
   return (
     <div
-      className="row"
-      style={{ backgroundColor: "antiquewhite", userSelect: "none" }}
+      className="m-3 p-3 text-center rounded-xl"
+      style={{ userSelect: "none" }}
     >
       <p>{data.name}</p>
-      {data.columns.map((column) => (
-        <Column key={column.id} data={column} />
-      ))}
+      <div className="flex justify-between">
+        {data.columns.map((column) => (
+          <Column
+            key={column.id}
+            data={column}
+            dashboards={dashboards}
+            setDashboards={setDashboards}
+          />
+        ))}
+      </div>
     </div>
   );
 }

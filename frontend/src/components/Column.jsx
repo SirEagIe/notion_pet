@@ -1,14 +1,31 @@
 import Card from "./Card";
+import CardModal from "./CardModal";
 import DroppableContainer from "./DroppableContainer";
-import { Fragment } from "react";
+import { useRef, Fragment } from "react";
+import { createPortal } from "react-dom";
 
-export default function Column({ data }) {
+export default function Column({ data, dashboards, setDashboards }) {
   const style = {
     backgroundColor: "blueviolet",
   };
+  const modalRef = useRef();
   return (
     <>
-      <div className="col m-1 pb-2" style={style}>
+      {createPortal(
+        <CardModal
+          data={{
+            id: -1,
+            col_id: data.id,
+            name: "-",
+            text: "-",
+          }}
+          modalRef={modalRef}
+          dashboards={dashboards}
+          setDashboards={setDashboards}
+        />,
+        document.getElementById("modal")
+      )}
+      <div className="m-1 p-1 rounded-xl w-full" style={style}>
         {data.name}
         <div>
           {data.cards.map((card) => (
@@ -21,7 +38,12 @@ export default function Column({ data }) {
                   card: card.id,
                 }}
               />
-              <Card key={card.id} data={card} />
+              <Card
+                key={card.id}
+                data={card}
+                dashboards={dashboards}
+                setDashboards={setDashboards}
+              />
             </Fragment>
           ))}
         </div>
@@ -30,6 +52,15 @@ export default function Column({ data }) {
           key={data.id + "_0"}
           data={{ id: data.id + "_0", column: data.id, card: 0 }}
         />
+
+        <button
+          className="bg-gray-800 rounded-2xl mt-1 mb-1 p-1 w-10"
+          onClick={() => {
+            modalRef.current.showModal();
+          }}
+        >
+          +
+        </button>
       </div>
     </>
   );
