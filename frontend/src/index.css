@@ -1,0 +1,7 @@
+.disabled:disabled {
+  background-color: #fff !important;
+}
+
+* {
+  outline: 0 !important;
+}

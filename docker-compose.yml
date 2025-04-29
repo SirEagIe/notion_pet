@@ -1,0 +1,32 @@
+version: '3.3'
+
+volumes:
+  db_volume:
+    external: true
+  nginx_volume:
+    external: true
+
+services:
+  db:
+    image: postgres:17
+    container_name: db
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: grespost
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: password
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@test.ru
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    ports:
+      - 8888:80
+    restart: always
