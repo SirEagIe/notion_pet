@@ -34,6 +34,7 @@ urlpatterns = [
     }), name='kanban_cards'),
     path('kanban_card/<int:pk>/', views.KanbanCardViewSet.as_view({
         'get': 'retrieve',
+        'patch': 'partial_update',
         'delete': 'destroy'
     }), name='kanban_card'),
     path('kanban_card_tag/', views.KanbanCardTagViewSet.as_view({

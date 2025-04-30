@@ -4,29 +4,13 @@ import DroppableContainer from "./DroppableContainer";
 import { useRef, Fragment } from "react";
 import { createPortal } from "react-dom";
 
-export default function Column({ colomnData, dashboards, setDashboards }) {
+export default function Column({ colomnData, modalRef, setSelectedCard, setSelectedColumn }) {
   const style = {
     backgroundColor: "blueviolet",
   };
-  const modalRef = useRef();
+
   return (
     <>
-      {createPortal(
-        <CardModal
-          cardData={{
-            id: -1,
-            col_id: colomnData.id,
-            name: "-",
-            text: "-",
-            images: [],
-          }}
-          modalRef={modalRef}
-          dashboards={dashboards}
-          setDashboards={setDashboards}
-          editMode={true}
-        />,
-        document.getElementById("modal")
-      )}
       <div className="col m-1" style={style}>
         {colomnData.name}
         <div>
@@ -43,8 +27,8 @@ export default function Column({ colomnData, dashboards, setDashboards }) {
               <Card
                 key={card.id}
                 cardData={card}
-                dashboards={dashboards}
-                setDashboards={setDashboards}
+                modalRef={modalRef}
+                setSelectedCard={setSelectedCard}
               />
             </Fragment>
           ))}
@@ -58,6 +42,8 @@ export default function Column({ colomnData, dashboards, setDashboards }) {
         <button
           className="btn btn-sm btn-primary m-2"
           onClick={() => {
+            setSelectedColumn(colomnData.id);
+            setSelectedCard(-1);
             modalRef.current.showModal();
           }}
         >

@@ -37,8 +37,16 @@ class KanbanTypeViewSet(viewsets.ViewSet):
 
 class KanbanBoardViewSet(viewsets.ViewSet):
     def list(self, request):
+        query_params = dict(request.GET.items())
         queryset = KanbanBoard.objects.all()
-        serializer = KanbanBoardSerializer(queryset, many=True)
+        if query_params.get('columns'):
+            for kanban_board in queryset:
+                kanban_board.columns = KanbanColumn.objects.filter(board__pk=kanban_board.pk)
+                for column in (kanban_board.columns if query_params.get('cards') else []):
+                    column.cards = KanbanCard.objects.filter(column__pk=column.pk) 
+                    for card in (column.cards if query_params.get('images') else []):
+                        card.images = KanbanCardImage.objects.filter(card__pk=card.pk)
+        serializer = KanbanBoardDetailSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
@@ -124,6 +132,16 @@ class KanbanCardViewSet(viewsets.ViewSet):
         serializer.save()
         return Response(data=serializer.data)
 
+    def partial_update(self, request, pk=None):
+        queryset = KanbanCard.objects.all()
+        kanban_card = get_object_or_404(queryset, pk=pk)
+        serializer = KanbanCardSerializer(
+            kanban_card, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data)
+
     def destroy(self, request, pk=None):
         queryset = KanbanCard.objects.all()
         kanban_card = get_object_or_404(queryset, pk=pk)
@@ -164,21 +182,21 @@ class KanbanCardImageViewSet(viewsets.ViewSet):
         queryset = KanbanCardImage.objects.all()
         serializer = KanbanCardImageSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     def retrieve(self, request, pk):
         query_params = dict(request.GET.items())
         queryset = KanbanCardImage.objects.all()
         kanban_card_image = get_object_or_404(queryset, pk=pk)
         serializer = KanbanCardImageSerializer(kanban_card_image)
         return Response(serializer.data)
-    
+
     def create(self, request):
         serializer = KanbanCardImageSerializer(
             data=request.data
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(data=serializer.data)
+        return Response(status=200)
 
     def destroy(self, request, pk=None):
         queryset = KanbanCardImage.objects.all()

@@ -3,29 +3,76 @@ import { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import Carousel from "react-bootstrap/Carousel";
 
+
 export default function CardModal({
-  cardData,
+  selectedCard,
+  selectedColumn,
   modalRef,
   dashboards,
-  setDashboards,
-  editMode = false,
+  setDashboards
 }) {
-  const [cardName, setCardName] = useState(cardData.name);
-  const [cardText, setCardText] = useState(cardData.text);
-  const [cardImages, setCardImages] = useState(cardData.images);
-  const [isEditMode, setIsEditMode] = useState(editMode);
+  const [cardTitle, setCardTitle] = useState("");
+  const [cardText, setCardText] = useState("");
+  const [cardImages, setCardImages] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
 
-  function saveDashboards() {
-    setIsEditMode(editMode);
+  useEffect(() => {
+    if (selectedCard !== -1) {
+      fetch('http://sireagle.ru:8889/kanban_card/' + selectedCard + '/?images=1')
+      .then(r => r.json())
+      .then(r => {
+          setCardTitle(r.title);
+          setCardText(r.text);
+          setCardImages(r.images || []);
+        }
+      )
+    }
+    else {
+      setCardTitle("");
+      setCardText("");
+      setCardImages([]);
+      setIsEditMode(true);
+    }
+  }, [selectedCard])
 
-    if (cardData.id !== -1) {
+  function deleteCard() {
+    setIsEditMode(false);
+    fetch('http://sireagle.ru:8889/kanban_card/' + selectedCard + '/', {
+      method: "DELETE"
+    })
+    setDashboards((prevState) => {
+      let newState = [...prevState];
+      newState.forEach((dash) => {
+        dash.columns.forEach((col) => {
+          col.cards = col.cards.filter((card) => card.id !== selectedCard);
+        });
+      });
+      return newState;
+    })
+    modalRef.current.close();
+  }
+
+  function saveCard() {
+    setIsEditMode(false);
+
+    if (selectedCard !== -1) {
+      fetch('http://sireagle.ru:8889/kanban_card/' + selectedCard + '/', {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: cardTitle,
+          text: cardText
+        })
+      })
       setDashboards((prevState) => {
         let newState = [...prevState];
         newState.forEach((dash) => {
           dash.columns.forEach((col) => {
             col.cards.forEach((card) => {
-              if (card.id === cardData.id) {
-                card.name = cardName;
+              if (card.id === selectedCard) {
+                card.title = cardTitle;
                 card.text = cardText;
                 card.images = cardImages;
               }
@@ -35,6 +82,47 @@ export default function CardModal({
         return newState;
       });
     } else {
+      let position = 0;
+      dashboards.forEach((dash) => {
+        dash.columns.forEach((col) => {
+          if (col.id == selectedColumn) {
+            col.cards.forEach((card) => {
+              if (card.position > position) {
+                position = card.position;
+              }
+            });
+          }
+        });
+      });
+      fetch('http://sireagle.ru:8889/kanban_card/', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: cardTitle,
+          text: cardText,
+          column: selectedColumn,
+          position: position + 100,
+        })
+      })
+      .then(r => r.json())
+      .then(
+        (r) => {
+          cardImages.forEach((image) => {
+            fetch('http://sireagle.ru:8889/kanban_card_image/', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                image: image,
+                card: r.id
+              })
+            })
+          })
+        }
+      );
       setDashboards((prevState) => {
         let newState = [...prevState];
         let max_id = 0;
@@ -49,12 +137,13 @@ export default function CardModal({
         });
         newState.forEach((dash) => {
           dash.columns.forEach((col) => {
-            if (col.id === cardData.col_id) {
+            if (col.id === selectedColumn) {
               col.cards.push({
                 id: max_id + 1,
-                name: cardName,
+                title: cardTitle,
                 text: cardText,
                 images: cardImages,
+                position: position + 100,
               });
             }
           });
@@ -71,7 +160,6 @@ export default function CardModal({
       for (let i = 0; i < items.length; i++) {
         if (items[i].type.startsWith("image")) {
           let file = items[i].getAsFile();
-          console.log(file);
           let reader = new FileReader();
           reader.onload = (e) => {
             setCardImages((prevState) => {
@@ -86,16 +174,14 @@ export default function CardModal({
       }
     }
   };
+
   return (
     <>
       <dialog
         className="text-center w-75"
         ref={modalRef}
         onClose={() => {
-          setCardName(cardData.name);
-          setCardText(cardData.text);
-          setCardImages(cardData.images);
-          setIsEditMode(editMode);
+          setIsEditMode(false);
         }}
         style={{
           border: 0,
@@ -106,8 +192,8 @@ export default function CardModal({
           <input
             disabled={!isEditMode}
             className="form-control mb-3 disabled"
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value)}
+            value={cardTitle}
+            onChange={(e) => setCardTitle(e.target.value)}
             type="text"
           />
           <textarea
@@ -136,9 +222,17 @@ export default function CardModal({
           </button>
           <button
             className="btn btn-sm btn-primary mx-3"
-            onClick={saveDashboards}
+            onClick={saveCard}
+            disabled={!isEditMode}
           >
             Save
+          </button>
+          <button
+            className="btn btn-sm btn-danger mx-3"
+            onClick={deleteCard}
+            // disabled={!isEditMode}
+          >
+            Delete
           </button>
         </div>
       </dialog>

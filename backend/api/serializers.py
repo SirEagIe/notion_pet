@@ -30,7 +30,7 @@ class KanbanCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KanbanCard
-        fields = ["id", "title", "text", "column", "tag"]
+        fields = ["id", "title", "text", "column", "tag", "position"]
         read_only_fields = ["id"]
 
 
@@ -44,7 +44,7 @@ class KanbanCardDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KanbanCard
-        fields = ["id", "title", "text", "tag", "images"]
+        fields = ["id", "title", "text", "tag", "position", "images"]
         read_only_fields = ["id"]
 
 

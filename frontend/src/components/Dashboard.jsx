@@ -1,11 +1,7 @@
 import Column from "./Column";
 import { useState } from "react";
 
-export default function Dashboard({
-  dashboardData,
-  dashboards,
-  setDashboards,
-}) {
+export default function Dashboard({ dashboardData, modalRef, setSelectedCard, setSelectedColumn }) {
   return (
     <div className="row text-center" style={{ userSelect: "none" }}>
       <div className="col">
@@ -19,8 +15,9 @@ export default function Dashboard({
             <Column
               key={column.id}
               colomnData={column}
-              dashboards={dashboards}
-              setDashboards={setDashboards}
+              modalRef={modalRef}
+              setSelectedCard={setSelectedCard}
+              setSelectedColumn={setSelectedColumn}
             />
           ))}
         </div>

@@ -24,6 +24,7 @@ class KanbanCard(models.Model):
     text = models.TextField()
     column = models.ForeignKey(KanbanColumn, on_delete=models.CASCADE)
     tag = models.ManyToManyField(KanbanCardTag)
+    position = models.IntegerField()
 
 
 class KanbanCardImage(models.Model):
